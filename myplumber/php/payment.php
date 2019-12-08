@@ -9,7 +9,7 @@ $amount = $_GET['amount'];
 $orderid = $_GET['orderid'];
 
 $api_key = '2c9fdf10-8ca3-4874-8e39-0d79bab09cb3';
-$host = 'https://www.billplz.com/api/v3/bills';
+$host = 'https://billplz-sandbox.com/api/v3/bills';
 $collection_id = 'pku9crxh';
 
 $data = array(

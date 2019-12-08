@@ -3,10 +3,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:lab_4/loginscreen.dart';
+import 'package:lab_5/loginscreen.dart';
 import 'package:flutter/services.dart';
-import 'package:lab_4/payment.dart';
-import 'package:lab_4/registerscreen2.dart';
+import 'package:lab_5/payment.dart';
+import 'package:lab_5/registerscreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 import 'plumber.dart';
@@ -554,6 +554,7 @@ class _Page3State extends State<Page3> {
               onPressed: () async {
                 if(_value!=null){
                   Navigator.of(context).pop();
+                  print('into the payment');
                   var now = new DateTime.now();
                   var formatter = new DateFormat('ddMMyyyyhhmmss-');
                   String formatted = formatter.format(now)+randomAlphaNumeric(10);

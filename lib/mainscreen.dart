@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lab_4/page1.dart';
-import 'package:lab_4/page2.dart';
-import 'package:lab_4/page3.dart';
+import 'package:lab_5/page1.dart';
+import 'package:lab_5/page2.dart';
+import 'package:lab_5/page3.dart';
 import 'plumber.dart';
 
 class MainScreen extends StatefulWidget {

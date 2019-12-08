@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lab_4/mainscreen.dart';
-import 'package:lab_4/registerscreen2.dart';
+import 'package:lab_5/mainscreen.dart';
+import 'package:lab_5/registerscreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:lab_4/plumber.dart';
+import 'package:lab_5/plumber.dart';
 
 String urlLogin = "https://mobilehost2019.com/myplumber/php/login_user.php";
 final TextEditingController _emcontroller = TextEditingController();
@@ -35,7 +35,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
-    loadpref();
+    //loadpref();
     print('Init: $_email');
     super.initState();
   }
