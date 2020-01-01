@@ -19,13 +19,13 @@ final TextEditingController _passcontroller = TextEditingController();
 final TextEditingController _phcontroller = TextEditingController();
 String _name, _email, _password, _phone;
 
-class RegisterScreen2 extends StatefulWidget {
+class RegisterScreen extends StatefulWidget {
   @override
   _RegisterUser2State createState() => _RegisterUser2State();
-  const RegisterScreen2({Key key, File image}) : super(key: key);
+  const RegisterScreen({Key key, File image}) : super(key: key);
 }
 
-class _RegisterUser2State extends State<RegisterScreen2> {
+class _RegisterUser2State extends State<RegisterScreen> {
   @override
   void initState() { 
     super.initState();

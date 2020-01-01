@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lab_5/page1.dart';
 import 'package:lab_5/page2.dart';
 import 'package:lab_5/page3.dart';
+import 'package:lab_5/page4.dart';
 import 'plumber.dart';
 
 class MainScreen extends StatefulWidget {
@@ -24,7 +25,8 @@ class _MainScreenState extends State<MainScreen> {
     pages = [
       Page1(plumber: widget.plumber),
       Page2(plumber: widget.plumber),
-      Page3(plumber: widget.plumber)
+      Page3(plumber: widget.plumber),
+      Page4(plumber: widget.plumber)
     ];
   }
 
@@ -49,6 +51,10 @@ class _MainScreenState extends State<MainScreen> {
             BottomNavigationBarItem(
               icon: Icon(Icons.search),
               title: Text("Jobs"),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.event, ),
+              title: Text("Post Jobs"),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.event, ),

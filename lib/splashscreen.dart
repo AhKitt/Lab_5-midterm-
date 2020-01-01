@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'loginscreen.dart';
-import 'mainscreen.dart';
-import 'plumber.dart';
+import 'package:lab_5/loginscreen.dart';
+import 'package:lab_5/mainscreen.dart';
+import 'package:lab_5/plumber.dart';
 
 void main() => runApp(SplashScreen());
 
@@ -103,6 +103,7 @@ void loadpref(BuildContext context) async {
       name: "not register",
       email: "user@noregister",
       phone: "not register",
+      radius: "15",
       credit: "0",
       rating: "0");
     Navigator.push(
@@ -128,15 +129,21 @@ void _onLogin(String email, String pass, BuildContext context) {
       Plumber plumber = new Plumber(
           name: dres[1],
           email: dres[2],
-          phone: dres[3],);
+          phone: dres[3],
+          credit: dres[4],
+          rating: dres[5],
+          radius: dres[6]);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => MainScreen(plumber: plumber)));
     } else {
       //allow login as unregistered user
       Plumber plumber = new Plumber(
-          name: "not register",
-          email: "user@noregister",
-          phone: "not register",);
+        name: "not register",
+        email: "user@noregister",
+        phone: "not register",
+        radius: "15",
+        credit: "0",
+        rating: "0");
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => MainScreen(plumber: plumber)));
     }

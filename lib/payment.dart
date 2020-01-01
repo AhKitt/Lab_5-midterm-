@@ -57,7 +57,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
             name: dres[1],
             email: dres[2],
             phone: dres[3],
-            credit: dres[4],);
+            credit: dres[4],
+            rating: dres[5],
+            radius: dres[6]);
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => MainScreen(plumber: updateuser)));
       }

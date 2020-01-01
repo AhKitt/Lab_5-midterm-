@@ -26,7 +26,7 @@ class _JobDetailState extends State<JobDetail> {
         SystemUiOverlayStyle(statusBarColor: Colors.blueAccent));
     return WillPopScope(
       onWillPop: _onBackPressAppBar,
-      child: Scaffold(
+      child: Scaffold( 
           resizeToAvoidBottomPadding: false,
           appBar: AppBar(
             title: Text('JOB DETAILS'),
@@ -68,16 +68,31 @@ class DetailInterface extends StatefulWidget {
 class _DetailInterfaceState extends State<DetailInterface> {
   Completer<GoogleMapController> _controller = Completer();
   CameraPosition _myLocation;
+  List<Marker> markers = [];
 
   @override
   void initState() {
     super.initState();
-    /*_myLocation = CameraPosition(
+    print('here is detail');
+    print(widget.job.jobworker);
+    print(widget.job.joblat);
+    print(widget.job.joblat);
+    _myLocation = CameraPosition(
       target: LatLng(
-          double.parse(widget.job.joblat), double.parse(widget.job.joblon)),
-      zoom: 17,
+          double.parse(widget.job.joblat), double.parse(widget.job.joblng)),
+      zoom: 13.5,
     );
-    print(_myLocation.toString());*/
+
+    markers.add(Marker(
+      markerId: MarkerId('myMarker'),
+      infoWindow: InfoWindow(title: "Your Job Here"),
+      draggable: false,
+      onTap: (){
+        print('Marker Tapped');
+      },
+      position: LatLng(double.parse(widget.job.joblat), double.parse(widget.job.joblng)),
+      ));
+    print(_myLocation.toString());
   }
 
   @override
@@ -88,8 +103,8 @@ class _DetailInterfaceState extends State<DetailInterface> {
         Container(
           width: 280,
           height: 200,
-          child: Image.asset(
-              'assets/images/job.png',
+          child: Image.network(
+              'http://mobilehost2019.com/myplumber/jobimages/${widget.job.jobimage}.jpg',
               fit: BoxFit.fill),
         ),
         SizedBox(
@@ -97,10 +112,10 @@ class _DetailInterfaceState extends State<DetailInterface> {
         ),
         Text(widget.job.jobtitle.toUpperCase(),
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
             )),
-        //Text(widget.job.jobtime),
+        Text(widget.job.jobtime),
         Container(
           alignment: Alignment.topLeft,
           child: Column(
@@ -112,54 +127,41 @@ class _DetailInterfaceState extends State<DetailInterface> {
               Table(children: [
                 TableRow(children: [
                   Text("Job Owner",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text(widget.job.jobowner),
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  Text(widget.job.jobowner,
+                    style: TextStyle(fontSize: 16)),
                 ]),
                 TableRow(children: [
-                  Text("Owner Phone",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text(widget.job.jobphone)
-                ]),
-                TableRow(children: [
-                  Text("Job Location",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text(widget.job.jobadd)
+                  Text("Job Address",
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  Text(widget.job.jobadd,
+                  style: TextStyle(fontSize: 16))
                 ]),
               ]),
               SizedBox(
                 height: 10,
               ),
               Container(
-                height: 120,
+                height: 170,
                 width: 340,
                 child: GoogleMap(
                   // 2
                   initialCameraPosition: _myLocation,
                   // 3
-                  mapType: MapType.normal,
+                  mapType: MapType.hybrid,
                   // 4
+                  markers: Set.from(markers),
+                  
 
                   onMapCreated: (GoogleMapController controller) {
                     _controller.complete(controller);
                   },
                 ),
               ),
+              SizedBox(height: 8,),
               Container(
                 width: 350,
-                child: MaterialButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0)),
-                  height: 40,
-                  child: Text(
-                    'ACCEPT JOB',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  color: Colors.deepOrangeAccent,
-                  textColor: Colors.white,
-                  elevation: 5,
-                  onPressed: _onAcceptJob,
-                ),
-                //MapSample(),
+                child: hasWorker()? rejectButton():acceptButton(),
               )
             ],
           ),
@@ -168,12 +170,49 @@ class _DetailInterfaceState extends State<DetailInterface> {
     );
   }
 
+  bool hasWorker(){
+    if(widget.job.jobworker==null){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
+  //-----------------------Accept Job-----------------------
+  Widget acceptButton(){
+    return MaterialButton(
+      
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0)),
+      height: 40,
+      child: Text(
+        'ACCEPT JOB',
+        style: TextStyle(fontSize: 16),
+      ),
+      color: Colors.blueAccent,
+      textColor: Colors.white,
+      elevation: 5,
+      onPressed: _onAcceptJob,
+    );
+  }
+
   void _onAcceptJob() {
-     if (widget.plumber.email=="user@noregister"){
+    if (widget.plumber.email=="user@noregister"){
       Toast.show("Please register to view accept jobs", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
       return;
-    }else{
+    }
+    else if(widget.job.jobworker!=null){
+      Toast.show("This job already accepted", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      return;
+    }
+    else if(widget.plumber.email==widget.job.jobowner){
+      Toast.show("Cannot accept by job owner", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      return;
+    } 
+    else{
       _showDialog();
     }
     print("Accept Job");
@@ -199,6 +238,7 @@ class _DetailInterfaceState extends State<DetailInterface> {
             new FlatButton(
               child: new Text("Yes"),
               onPressed: () {
+                print("click yes");
                 Navigator.of(context).pop();
                 acceptRequest();
               },
@@ -216,7 +256,7 @@ class _DetailInterfaceState extends State<DetailInterface> {
   }
 
   Future<String> acceptRequest() async {
-    String urlLoadJobs = "http://slumberjer.com/myhelper/php/accept_job.php";
+    String urlLoadJobs = "http://mobilehost2019.com/myplumber/php/accept_job.php";
     ProgressDialog pr = new ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false);
     pr.style(message: "Accepting Job");
@@ -231,6 +271,91 @@ class _DetailInterfaceState extends State<DetailInterface> {
         Toast.show("Success", context,
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
             pr.dismiss();
+            print(widget.plumber.email);
+            _onLogin(widget.plumber.email, context);
+      } else {
+        Toast.show("Failed", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+            pr.dismiss();
+      }
+    }).catchError((err) {
+      print(err);
+      pr.dismiss();
+    });
+    return null;
+  }
+
+  //-----------------------Reject Job-----------------------
+  Widget rejectButton(){
+    return MaterialButton(
+      
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0)),
+      height: 40,
+      child: Text(
+        'REJECT JOB',
+        style: TextStyle(fontSize: 16),
+      ),
+      color: Colors.red,
+      textColor: Colors.white,
+      elevation: 5,
+      onPressed: _rejectJob,
+    );
+  }
+
+  void _rejectJob() {
+    // flutter defined function
+    // if (int.parse(widget.plumber.credit)<1){
+    //     Toast.show("Credit not enough ", context,
+    //         duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    //         return;
+    // }
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Reject " + widget.job.jobtitle),
+          content: new Text("Are your sure?"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Yes"),
+              onPressed: () {
+                print("click yes");
+                Navigator.of(context).pop();
+                rejectRequest();
+              },
+            ),
+            new FlatButton(
+              child: new Text("No"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<String> rejectRequest() async {
+    String urlLoadJobs = "http://mobilehost2019.com/myplumber/php/reject_job.php";
+    ProgressDialog pr = new ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false);
+    pr.style(message: "Rejecting Job");
+    pr.show();
+    http.post(urlLoadJobs, body: {
+      "jobid": widget.job.jobid,
+      "email": widget.plumber.email,
+      "credit": widget.plumber.credit,
+    }).then((res) {
+      print(res.body);
+      if (res.body == "success") {
+        Toast.show("Success", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+            pr.dismiss();
+            print(widget.plumber.email);
             _onLogin(widget.plumber.email, context);
       } else {
         Toast.show("Failed", context,
@@ -245,7 +370,7 @@ class _DetailInterfaceState extends State<DetailInterface> {
   }
 
    void _onLogin(String email, BuildContext ctx) {
-     String urlgetuser = "http://slumberjer.com/myhelper/php/get_user.php";
+     String urlgetuser = "http://mobilehost2019.com/myplumber/php/get_user.php";
 
     http.post(urlgetuser, body: {
       "email": email,
@@ -260,7 +385,8 @@ class _DetailInterfaceState extends State<DetailInterface> {
             email: dres[2],
             phone: dres[3],
             credit: dres[4],
-            rating: dres[5]);
+            rating: dres[5],
+            radius: dres[6]);
         Navigator.push(ctx,
             MaterialPageRoute(builder: (context) => MainScreen(plumber: plumber)));
       }

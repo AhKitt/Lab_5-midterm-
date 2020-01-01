@@ -1,16 +1,26 @@
 class Job {
   String jobid,
       jobtitle,
-      jobphone,
+      jobdesc,
       jobowner,
       jobworker,
-      jobadd;
+      jobadd,
+      jobprice,
+      joblat,
+      joblng,
+      jobimage,
+      jobtime;
 
   Job(
       {this.jobid,
       this.jobtitle,
       this.jobowner,
-      this.jobphone,
+      this.jobdesc,
       this.jobworker,
-      this.jobadd});
+      this.jobadd,
+      this.jobprice,
+      this.joblat,
+      this.joblng,
+      this.jobimage,
+      this.jobtime});
 }
